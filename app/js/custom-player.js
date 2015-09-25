@@ -7,15 +7,22 @@ function inicialice () {
 }
 
 function bindSongNameButton () {
-	// var track_url = "https://soundcloud.com/miami-nights-1984/ocean-drive";
 	var track_url = "https://soundcloud.com/darse/kase-o-jazz-magnetism-boogaloo"
+	var list_url = "https://soundcloud.com/mammamia6/sets"
 	jQuery('#song-name').on('click', function () {
-  		resolveSong(track_url);
+  		// resolveSong(track_url);
+  		resolveList(list_url);
   	});
 }
 
 function resolveSong ( track_url ) {
 	SC.get('/resolve', { url: track_url }, streamSong);
+}
+
+function resolveList ( list_url ) {
+	SC.get('/resolve', { url: list_url }, function ( playlist ) {
+		console.log(playlist);
+	});
 }
 
 function streamSong ( track ) {
