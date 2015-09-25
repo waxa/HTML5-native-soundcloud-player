@@ -10,8 +10,8 @@ function bindSongNameButton () {
 	var track_url = "https://soundcloud.com/darse/kase-o-jazz-magnetism-boogaloo"
 	var list_url = "https://soundcloud.com/mammamia6/sets"
 	jQuery('#song-name').on('click', function () {
-  		// resolveSong(track_url);
-  		resolveList(list_url);
+  		resolveSong(track_url);
+  		// resolveList(list_url);
   	});
 }
 
