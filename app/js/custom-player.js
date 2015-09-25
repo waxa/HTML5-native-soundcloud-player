@@ -6,13 +6,9 @@ function inicialice () {
   	bindSongNameButton();
 }
 
-function bindSongNameButton () {
-	var track_url = "https://soundcloud.com/darse/kase-o-jazz-magnetism-boogaloo"
-	var list_url = "https://soundcloud.com/mammamia6/sets"
-	jQuery('#song-name').on('click', function () {
-  		resolveSong(track_url);
-  		// resolveList(list_url);
-  	});
+function bindSongNameButton () {	
+	var list_url = "http://api.soundcloud.com/playlists/113525318";
+	resolveList(list_url);
 }
 
 function resolveSong ( track_url ) {
@@ -22,8 +18,36 @@ function resolveSong ( track_url ) {
 function resolveList ( list_url ) {
 	SC.get('/resolve', { url: list_url }, function ( playlist ) {
 		console.log(playlist);
+		jQuery('#song-name > span').html(playlist.title)
+		var list_items = "";
+		
+		for (var i=0; i<playlist.tracks.length; i++){
+			list_items += '<li id="track_' + i + '">' + playlist.tracks[i].title + '</li>';
+		}
+		
+		jQuery('ul.dropdown-menu').html(list_items);
+		var ancho = jQuery(window).width() - jQuery('div.dropdown-toggle').offset().left;
+		ancho *= 0.8;
+		jQuery('ul.dropdown-menu > li').css('width', (ancho + 'px'));
+
+		jQuery('ul.dropdown-menu > li').each(function (index, e) {
+			jQuery(this).on('click', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				resolveSong( playlist.tracks[index].uri );
+			});
+		});
+
+		jQuery('#play').on('click', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			jQuery('#play').off('click');
+			resolveSong ( playlist.tracks[0].uri);
+
+		});
 	});
 }
+
 
 function streamSong ( track ) {
 	console.log('track = ', track);
@@ -35,7 +59,7 @@ function streamSong ( track ) {
 function bindControls ( sound ) {
 	console.log('sound = ', sound);
 
-	sound.setAutoPlay(false);
+	sound.setAutoPlay(true);
 
 	sound.options.whileplaying = function () {
 		jQuery('#time').css('width', (((this.position / this.durationEstimate) * 100) + '%'));
@@ -85,12 +109,16 @@ function bindControls ( sound ) {
 		sound.setPosition(position); 
 	});
 	
-	jQuery('#play').on('click', function () {
+	jQuery('#play').on('click', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 		if (sound.playState) sound.togglePause();
 		else sound.play();
 	});
 	
-	jQuery('#stop').on('click', function () {
+	jQuery('#stop').on('click', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 		sound.stop();
 	});
 
@@ -118,7 +146,9 @@ function bindControls ( sound ) {
 		jQuery('#volumen-icon > span > i').addClass('fa-volume-up');
 	}
 
-	jQuery('#volumen-icon').on('click', function () {
+	jQuery('#volumen-icon').on('click', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 		sound.toggleMute();
 		jQuery('#volumen-icon > span > i').toggleClass('fa-volume-off fa-volume-up');
 	});
@@ -130,12 +160,13 @@ function bindControls ( sound ) {
 		sound.setVolume(percent);
 	});
 
-	jQuery('#song-name > span').on('click', function() {
-		jQuery('#time').css('width', '0%');
-		jQuery('#load').css('width', '0%');
-		jQuery('#play > span > i').addClass('fa-play');
-		jQuery('#play > span > i').removeClass('fa-pause');
-		sound.destruct();
+	jQuery('ul.dropdown-menu > li').each(function (index, e) {
+		jQuery(this).on('click', function (e) {
+			sound.destruct();
+			e.preventDefault();
+			e.stopPropagation();
+			resolveSong( playlist.tracks[index].uri );
+		});
 	});
 
 	console.log("bind finished");
