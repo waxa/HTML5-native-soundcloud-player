@@ -1,0 +1,261 @@
+.circle {
+    -webkit-border-radius: 50%;
+	border-radius: 50%;
+    height: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.blog-first {
+	padding: 0;
+}
+
+.waxa-container,
+.blog-descrip-wrapper {
+	display: table;
+	width: 100%;
+	vertical-align: middle;
+	text-align: center;
+	min-height: 100%;
+}
+
+.blog-descrip-wrapper {
+	min-height: 300px;
+	padding: 0;
+}
+
+.waxa,
+.blog-descrip-inner {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+	min-height: 100%;
+}
+
+.container-fluid {
+	padding: 0;
+	margin: 0;
+}
+
+.row {
+	margin: 0;
+}
+
+#waxa_1 {
+	background-color: blue;
+}
+
+#waxa_2 {
+	background-color: burlywood;
+}
+
+#waxa_3 {
+	background-color: pink;
+} 
+
+#waxa_4 {
+	background-color: white;
+} 
+
+header {
+	width: 100%;
+	z-index: 100;
+	position: fixed;
+	background-color: black;
+	color: white;
+	font-size: bold;
+	text-align: center;
+}
+
+footer {
+	width: 100%;
+	background-color: black;
+	color: white;
+	font-size: bold;
+	text-align: center;
+}
+
+.titulo {
+	opacity: 1.0;
+}
+
+.titulo > a{
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.dibujo-container,
+.info-container {
+	vertical-align: middle;
+	text-align: center;
+	width: 100%;
+	display: table;
+	background-color: yellow;
+}
+
+.dibujo-container {
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.dibujo,
+.info {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+	height: 100%;
+}
+
+.info {
+	background-color: green;
+}
+
+.footer-col {
+	display: inline-block;
+	background-color: black;
+}
+
+.footer-item {
+	display: inline-block;
+	background-color: grey;
+}
+
+.author {
+	text-align: right;
+}
+
+ul {
+	text-align: justify;
+}
+
+.header-seccion {
+	width: 100%;
+	text-align: center;
+	background-color: darkblue;
+	color: white;
+}
+
+.empty-space {
+	height: 50px;
+}
+
+.header-menu {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.header-menu-item {
+	display: table;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+}
+
+.header-menu-item > a {
+	display: table-cell;
+	height: 100%;
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	text-decoration: none;	
+}
+
+.header-menu-item > a:hover,
+.header-menu-item > a:active,
+.header-menu-item > a:focus ,
+.dropdown-toggle:hover,
+.dropdown-toggle:active,
+.dropdown-toggle:focus {
+	text-decoration: none;
+	font-weight: bold;
+	color: yellow;
+}
+
+.on-air {
+	color: yellow !important;
+}
+
+.menu-drop {
+	display: table;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.dropdown {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.dropdown-toggle {
+	text-decoration: none;
+	color: white;
+	background-color: transparent;
+	border: 0;
+}
+
+.dropdown-menu {
+	background-color: black;
+	margin: 0;
+	padding: 0;
+}
+
+.dropdown-menu > li > a {
+	color: white;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:active{
+	font-weight: bold;
+}
+
+.blog-not-first {
+	min-height: 300px;
+	background-size: cover;
+	background-position: center;
+	background-color: rgba(0,0,0,0.7);
+	padding-top: 5%;
+	padding-bottom: 5%;
+}
+
+img.attachment-post-thumbnail.wp-post-image {
+	width: 100%;
+	height: auto;
+}
+
+.container-post {
+	background-color: rgba(0,0,0,0.7);	
+}
+
+.nav-container {
+	display: table;
+	vertical-align: middle;
+	text-align: center;
+	width: 100%;
+	min-height: 50px;		
+}
+
+.nav-inner {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+	height: 100%;
+
+}
+
+.nav-inner > a {
+	color: white;
+}
+
+.nav-inner > a:hover {
+	color: yellow;
+	text-decoration: none;
+}
