@@ -4,10 +4,20 @@
 	margin: 0;
 }
 
+.time-actual, .time-total {
+  padding: 0;
+  text-align: center;
+}
+
 .player-progress {
 	border-bottom: 2px solid darkblue;
 	padding: 0;
 	margin: 0;
+}
+
+.no-padding {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .player-controls {
@@ -28,14 +38,7 @@
 	background-color: rgba(49, 123, 152, 0.7);
 }
 
-#backward, #play, #forward, #stop, #song-list, #song-name {
-	margin: 0;
-	padding: 0;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-#volumen-icon {
+#backward, #play, #forward, #stop, #song-list, #song-name, #volumen-icon {
 	margin: 0;
 	padding: 0;
 	padding-top: 5px;

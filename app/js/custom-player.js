@@ -59,14 +59,14 @@ function bindControls ( sound ) {
 
 	sound.options.onstop = function () {
 		jQuery('#time').css('width', '0%');
-		jQuery('.time-actual').html('0:00');
+		jQuery('.time-actual').html(' 0:00');
 		jQuery('#play > span > i').addClass('fa-play');
 		jQuery('#play > span > i').removeClass('fa-pause');
 	}
 
 	jQuery('#load').css('width', '0%');
 	jQuery('#time').css('width', '0%');
-	jQuery('.time-actual').html('0:00');
+	jQuery('.time-actual').html(' 0:00');
 
 	jQuery('.player-progress').on('click', function (e){
 		var percent = e.pageX - jQuery('.player-progress').offset().left;
@@ -143,10 +143,11 @@ function millisToMinSec ( time ) {
 	if (sec < 10) {
 		sec = '0' + sec;
 	}
-	return (min + ':' + sec);
+	return (' ' + min + ':' + sec);
 }
 
 jQuery(document).ready(function () {
 	inicialice();
+	// jQuery('#volumen-spiner').css('min-height', '10px');
 	console.log("document ready");
 });
