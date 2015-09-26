@@ -1,175 +1,180 @@
+var clientId = "501c1160b25e660b70fce7761fb86b62";
+var list_url = "http://api.soundcloud.com/playlists/113525318";
+
+var playlistGlobal = null;
+var actualSong = null;
+var firstSong = true;
+
 function inicialice () {
 	SC.initialize({
-    	client_id: "501c1160b25e660b70fce7761fb86b62"
+    	client_id: clientId
   	});
-
-  	bindSongNameButton();
-}
-
-function bindSongNameButton () {	
-	var list_url = "http://api.soundcloud.com/playlists/113525318";
-	resolveList(list_url);
-}
-
-function resolveSong ( track_url ) {
-	SC.get('/resolve', { url: track_url }, streamSong);
+  	resolveList(list_url);
 }
 
 function resolveList ( list_url ) {
 	SC.get('/resolve', { url: list_url }, function ( playlist ) {
-		console.log(playlist);
-		jQuery('#song-name > span').html(playlist.title)
+		playlistGlobal = playlist;
+		
+		jQuery('#song-name > span').html(playlistGlobal.title)
+		
 		var list_items = "";
 		
-		for (var i=0; i<playlist.tracks.length; i++){
-			list_items += '<li id="track_' + i + '">' + playlist.tracks[i].title + '</li>';
+		for (var i=0; i<playlistGlobal.tracks.length; i++){
+			list_items += '<li>' + playlist.tracks[i].title + '</li>';
 		}
 		
 		jQuery('ul.dropdown-menu').html(list_items);
-		var ancho = jQuery(window).width() - jQuery('div.dropdown-toggle').offset().left;
-		ancho *= 0.8;
+		var ancho = jQuery(window).width() - (jQuery('div.dropdown-toggle').offset().left*2);
 		jQuery('ul.dropdown-menu > li').css('width', (ancho + 'px'));
 
 		jQuery('ul.dropdown-menu > li').each(function (index, e) {
 			jQuery(this).on('click', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-				resolveSong( playlist.tracks[index].uri );
+				resolveSong( playlistGlobal.tracks[index].uri );
 			});
 		});
 
-		jQuery('#play').on('click', function (e) {
-			e.preventDefault();
-			e.stopPropagation();
-			jQuery('#play').off('click');
-			resolveSong ( playlist.tracks[0].uri);
-
+		jQuery('#play').on('click', function () {
+			resolveSong( playlistGlobal.tracks[0].uri );
 		});
 	});
 }
 
 
+function resolveSong ( track_url ) {
+	if (actualSong) {
+		actualSong.destruct();
+	}
+	SC.get('/resolve', { url: track_url }, streamSong);
+}
+
 function streamSong ( track ) {
-	console.log('track = ', track);
 	jQuery('#song-name > span').html(track.title);
 	jQuery('.time-total').html(millisToMinSec(track.duration));
 	SC.stream('/tracks/' + track.id + '/', bindControls);
 }
 
+var setIconPause = function () {
+	jQuery('#play > span > i').removeClass('fa-play');
+	jQuery('#play > span > i').addClass('fa-pause');
+}
+
+var setIconPlay = function () {
+	jQuery('#play > span > i').removeClass('fa-pause');
+	jQuery('#play > span > i').addClass('fa-play');
+}
+
+var whilePlayingSong = function () {
+	jQuery('#time').css('width', (((actualSong.position / actualSong.durationEstimate) * 100) + '%'));
+	jQuery('.time-actual').html(millisToMinSec(actualSong.position));
+}
+
+var whileLoadingSong = function () {
+	jQuery('#load').css('width', (((actualSong.bytesLoaded / actualSong.bytesTotal) * 100) + '%'));
+}
+
+var onFinishSong = function () {
+	actualSong.setPosition(0);
+}
+
+var onStopSong = function () {
+	jQuery('#time').css('width', '0%');
+	jQuery('.time-actual').html(' 0:00');
+	jQuery('#play > span > i').addClass('fa-play');
+	jQuery('#play > span > i').removeClass('fa-pause');
+}
+
+var onProgressSong = function (e) {
+	var percent = e.pageX - jQuery('.player-progress').offset().left;
+	percent = (percent / jQuery('.player-progress').width()) * 100;
+	if ( percent > 100 ) percent = 100;
+	if ( percent < 0 ) percent = 0;
+	jQuery('#time').css('width', (percent + '%'));	
+	var position = (actualSong.duration / 100) * percent;
+	actualSong.setPosition(position);
+}
+
+var playSong = function () {
+	if (actualSong.playState) actualSong.togglePause();
+	else actualSong.play();	
+}
+
+var stopSong = function () {
+	actualSong.stop();
+}
+
+var forwardSong = function () {
+	var position = actualSong.position + (actualSong.durationEstimate / 10);
+	if ( position > actualSong.durationEstimate ) {
+		position = actualSong.durationEstimate - 1;
+	}
+	actualSong.setPosition(position);
+}
+
+var backwardSong = function () {
+	var position = actualSong.position - (actualSong.durationEstimate / 10);
+	if ( position < 0 ) {
+		position = 0;
+	}
+	actualSong.setPosition(position);
+}
+
+var toggleMuteSong = function () {
+	actualSong.toggleMute();
+	if (actualSong.muted) {
+		jQuery('#volumen-icon > span > i').removeClass('fa-volume-up');
+		jQuery('#volumen-icon > span > i').addClass('fa-volume-off');	
+	} else {
+		jQuery('#volumen-icon > span > i').removeClass('fa-volume-off');
+		jQuery('#volumen-icon > span > i').addClass('fa-volume-up');	
+	}
+}
+
+var changeVolumeSong = function () {
+	var percent = jQuery('#volumen').val();
+	actualSong.setVolume(percent);
+}
+
 function bindControls ( sound ) {
-	console.log('sound = ', sound);
+	actualSong = sound;
 
-	sound.setAutoPlay(true);
-
-	sound.options.whileplaying = function () {
-		jQuery('#time').css('width', (((this.position / this.durationEstimate) * 100) + '%'));
-		jQuery('.time-actual').html(millisToMinSec(this.position));
-	}
-
-	sound.options.whileloading = function () {
-		jQuery('#load').css('width', (((this.bytesLoaded / this.bytesTotal) * 100) + '%'));
-	}
-
-	sound.options.onfinish = function () {
-		jQuery('#play > span > i').toggleClass('fa-play fa-pause');
-		this.setPosition(0);
-	}
-
-	sound.options.onplay = function () {
-		jQuery('#play > span > i').removeClass('fa-play');
-		jQuery('#play > span > i').addClass('fa-pause');	
-	}
-
-	sound.options.onpause = function () {
-		jQuery('#play > span > i').toggleClass('fa-play fa-pause');
-	}
-
-	sound.options.onresume = function () {
-		jQuery('#play > span > i').toggleClass('fa-play fa-pause');	
-	}
-
-	sound.options.onstop = function () {
-		jQuery('#time').css('width', '0%');
-		jQuery('.time-actual').html(' 0:00');
-		jQuery('#play > span > i').addClass('fa-play');
-		jQuery('#play > span > i').removeClass('fa-pause');
-	}
+	actualSong.setAutoPlay(true);
+	actualSong.options.whileplaying = whilePlayingSong;
+	actualSong.options.whileloading = whileLoadingSong;
+	actualSong.options.onfinish = onFinishSong;
+	actualSong.options.onplay = setIconPause
+	actualSong.options.onpause = setIconPlay;
+	actualSong.options.onresume = setIconPause
+	actualSong.options.onstop = onStopSong;
 
 	jQuery('#load').css('width', '0%');
 	jQuery('#time').css('width', '0%');
 	jQuery('.time-actual').html(' 0:00');
+	jQuery('#volumen').val(actualSong.volume);
 
-	jQuery('.player-progress').on('click', function (e){
-		var percent = e.pageX - jQuery('.player-progress').offset().left;
-		percent = (percent / jQuery('.player-progress').width()) * 100;
-		if ( percent > 100 ) percent = 100;
-		if ( percent < 0 ) percent = 0;
-		jQuery('#time').css('width', (percent + '%'));	
-		var position = (sound.duration / 100) * percent;
-		sound.setPosition(position); 
-	});
-	
-	jQuery('#play').on('click', function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		if (sound.playState) sound.togglePause();
-		else sound.play();
-	});
-	
-	jQuery('#stop').on('click', function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		sound.stop();
-	});
-
-	jQuery('#forward').on('click', function () {
-		var position = sound.position + (sound.durationEstimate / 10);
-		if (position > sound.durationEstimate){
-			position = sound.durationEstimate - 1;
-		}
-		sound.setPosition(position)
-	});
-
-	jQuery('#backward').on('click', function () {
-		var position = sound.position - (sound.durationEstimate / 10);
-		if (position < 0){
-			position = 0;
-		}
-		sound.setPosition(position)
-	});
-
-	if (sound.muted) {
+	if (actualSong.muted) {
 		jQuery('#volumen-icon > span > i').removeClass('fa-volume-up');
 		jQuery('#volumen-icon > span > i').addClass('fa-volume-off');
 	} else {
 		jQuery('#volumen-icon > span > i').removeClass('fa-volume-off');
 		jQuery('#volumen-icon > span > i').addClass('fa-volume-up');
 	}
+	
+	jQuery('.player-progress').on('click', onProgressSong);
+	jQuery('#play').off();
+	jQuery('#play').off('click');
+	jQuery('#play').on('click', playSong);
+	jQuery('#stop').on('click', stopSong);
+	jQuery('#forward').on('click', forwardSong);
+	jQuery('#backward').on('click', backwardSong);
+	jQuery('#volumen-icon').on('click', toggleMuteSong);
+	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
-	jQuery('#volumen-icon').on('click', function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		sound.toggleMute();
-		jQuery('#volumen-icon > span > i').toggleClass('fa-volume-off fa-volume-up');
-	});
-
-	jQuery('#volumen').val(sound.volume);
-
-	jQuery('#volumen').on('change mousemove', function (){
-		var percent = jQuery('#volumen').val();
-		sound.setVolume(percent);
-	});
-
-	jQuery('ul.dropdown-menu > li').each(function (index, e) {
-		jQuery(this).on('click', function (e) {
-			sound.destruct();
-			e.preventDefault();
-			e.stopPropagation();
-			resolveSong( playlist.tracks[index].uri );
-		});
-	});
-
-	console.log("bind finished");
+	if (firstSong) {
+		sound.play();
+	} else {
+		firstSong = false;
+	}
 }
 
 function millisToMinSec ( time ) {
@@ -186,6 +191,4 @@ function millisToMinSec ( time ) {
 
 jQuery(document).ready(function () {
 	inicialice();
-	// jQuery('#volumen-spiner').css('min-height', '10px');
-	console.log("document ready");
 });
