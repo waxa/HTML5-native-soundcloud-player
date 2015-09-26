@@ -1,3 +1,7 @@
+#top {
+  padding-top: 15px;
+}
+
 .custom-player-wrapper {
 	border: 2px solid darkblue;
 	padding: 0;
@@ -6,6 +10,7 @@
 
 .time-actual, .time-total {
   padding: 0;
+  cursor: default;
   text-align: center;
 }
 
@@ -32,6 +37,10 @@
 
 .fa-bars {
   color: black;
+}
+
+.fa {
+  cursor: pointer;
 }
 
 #load, #time {
@@ -65,11 +74,16 @@ ul.dropdown-menu {
   left: 0;
   background-color: white;
   color: darkblue;
+  cursor: pointer;
 }
 
 ul.dropdown-menu > li {
   padding-left: 10%;
   padding-right: 10%;
+}
+
+ul.dropdown-menu > li:hover {
+  color: yellow;
 }
 
 input[type=range] {
