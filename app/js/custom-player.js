@@ -56,7 +56,6 @@ function streamSong ( track ) {
 var setIconPause = function () {
 	jQuery('#play > span > i').removeClass('fa-play');
 	jQuery('#play > span > i').addClass('fa-pause');
-	setTimeout(isPlaying, 500);
 }
 
 var setIconPlay = function () {
@@ -136,15 +135,6 @@ var toggleMuteSong = function () {
 	}
 }
 
-var isPlaying = function () {
-	if (!actualSong.playState) {
-		actualSong.play();
-	}
-	if (actualSong.paused) {
-		actualSong.resume();
-	}
-}
-
 var changeVolumeSong = function () {
 	var percent = jQuery('#volumen').val();
 	actualSong.setVolume(percent);
@@ -153,7 +143,7 @@ var changeVolumeSong = function () {
 function bindControls ( sound ) {
 	actualSong = sound;
 
-	actualSong.setAutoPlay(true);
+	actualSong.setAutoPlay(false);
 	actualSong.options.whileplaying = whilePlayingSong;
 	actualSong.options.whileloading = whileLoadingSong;
 	actualSong.options.onfinish = onFinishSong;
@@ -186,7 +176,6 @@ function bindControls ( sound ) {
 	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
 	sound.play();
-	setTimeout(isPlaying, 500);
 }
 
 function millisToMinSec ( time ) {
