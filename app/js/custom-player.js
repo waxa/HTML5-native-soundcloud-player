@@ -3,6 +3,7 @@ var list_url = "http://api.soundcloud.com/playlists/113525318";
 
 var playlistGlobal = null;
 var actualSong = null;
+var indexTrack = null;
 
 function inicialice () {
 	SC.initialize({
@@ -29,11 +30,13 @@ function resolveList ( list_url ) {
 
 		jQuery('ul.dropdown-menu > li').each(function (index, e) {
 			jQuery(this).on('click', function (e) {
+				indexTrack = index;
 				resolveSong( playlistGlobal.tracks[index].uri );
 			});
 		});
 
 		jQuery('#play').on('click', function () {
+			indexTrack = 0;
 			resolveSong( playlistGlobal.tracks[0].uri );
 		});
 	});
@@ -73,7 +76,9 @@ var whileLoadingSong = function () {
 }
 
 var onFinishSong = function () {
-	actualSong.setPosition(0);
+	indexTrack++;
+	if (indexTrack >= playlistGlobal.tracks.length) indexTrack = 0;
+	resolveSong( playlistGlobal.tracks[indexTrack].uri );
 }
 
 var onStopSong = function () {
@@ -94,14 +99,14 @@ var onProgressSong = function (e) {
 }
 
 var playSong = function () {
-	if (actualSong.playState){
-		if(actualSong.paused){
-			actualSong.resume();
-		}else {
-			actualSong.pause();
-		}
-	}
+	if (actualSong.playState) actualSong.togglePause();
 	else actualSong.play();	
+
+	setTimeout(isPlayingSong, 500);
+}
+
+var isPlayingSong = function () {
+	if (!actualSong.playState || actualSong.paused) setIconPause();
 }
 
 var stopSong = function () {
