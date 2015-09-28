@@ -106,7 +106,7 @@ var playSong = function () {
 }
 
 var isPlayingSong = function () {
-	if (!actualSong.playState || actualSong.paused) setIconPause();
+	if (!actualSong.playState || actualSong.paused) setIconPlay();
 }
 
 var stopSong = function () {
