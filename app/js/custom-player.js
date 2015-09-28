@@ -180,7 +180,7 @@ function bindControls ( sound ) {
 	jQuery('#volumen-icon').on('click', toggleMuteSong);
 	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
-	sound.play();
+	actualSong.play();
 }
 
 function millisToMinSec ( time ) {
