@@ -12,7 +12,6 @@ function inicialice () {
     	client_id: clientId,
     	redirect_uri: callbackUri 
   	});
-  	SC.
   	resolveList(list_url);
 }
 
