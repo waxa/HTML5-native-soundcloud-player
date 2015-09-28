@@ -1,7 +1,6 @@
 var clientId = "501c1160b25e660b70fce7761fb86b62";
-// var callbackUri = 'http://dev.brooktec.com/callback.html'
 
-var list_url = "http://api.soundcloud.com/playlists/113525318?client_id=" + clientId;
+var list_url = "http://api.soundcloud.com/playlists/113525318";
 
 var playlistGlobal = null;
 var actualSong = null;
@@ -11,52 +10,44 @@ function inicialice () {
 	SC.initialize({
     	client_id: clientId
   	});
-  	// SC.connect();
   	resolveList(list_url);
 }
 
-
-
 function resolveList ( list_url ) {
-	// SC.connect(function () {
-		SC.get('/resolve', { url: list_url }, function ( playlist ) {
-			playlistGlobal = playlist;
-			
-			jQuery('#song-name > span').html(playlistGlobal.title)
-			
-			var list_items = "";
-			
-			for (var i=0; i<playlistGlobal.tracks.length; i++){
-				list_items += '<li>' + playlist.tracks[i].title + '</li>';
-			}
-			
-			jQuery('ul.dropdown-menu').html(list_items);
-			var ancho = jQuery(window).width() - (jQuery('div.dropdown-toggle').offset().left*2);
-			jQuery('ul.dropdown-menu > li').css('width', (ancho + 'px'));
+	SC.get('/resolve', { url: list_url }, function ( playlist ) {
+		playlistGlobal = playlist;
+		
+		jQuery('#song-name > span').html(playlistGlobal.title)
+		
+		var list_items = "";
+		
+		for (var i=0; i<playlistGlobal.tracks.length; i++){
+			list_items += '<li>' + playlist.tracks[i].title + '</li>';
+		}
+		
+		jQuery('ul.dropdown-menu').html(list_items);
+		var ancho = jQuery(window).width() - (jQuery('div.dropdown-toggle').offset().left*2);
+		jQuery('ul.dropdown-menu > li').css('width', (ancho + 'px'));
 
-			jQuery('ul.dropdown-menu > li').each(function (index, e) {
-				jQuery(this).on('click', function (e) {
-					indexTrack = index;
-					resolveSong( playlistGlobal.tracks[index].uri );
-				});
-			});
-
-			jQuery('#play').on('click', function () {
-				indexTrack = 0;
-				resolveSong( playlistGlobal.tracks[0].uri );
+		jQuery('ul.dropdown-menu > li').each(function (index, e) {
+			jQuery(this).on('click', function (e) {
+				indexTrack = index;
+				resolveSong( playlistGlobal.tracks[index].uri );
 			});
 		});
-	// });
-}
 
+		jQuery('#play').on('click', function () {
+			indexTrack = 0;
+			resolveSong( playlistGlobal.tracks[0].uri );
+		});
+	});
+}
 
 function resolveSong ( track_url ) {
 	if (actualSong) {
 		actualSong.destruct();
 	}
-	// SC.connect(function ()  {
-		SC.get('/resolve', { url: track_url + "?client_id=" + clientId }, streamSong);	
-	// });
+	SC.get('/resolve', { url: track_url }, streamSong);		
 }
 
 function streamSong ( track ) {
