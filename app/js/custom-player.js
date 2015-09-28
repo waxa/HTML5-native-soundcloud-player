@@ -1,5 +1,5 @@
 var clientId = "501c1160b25e660b70fce7761fb86b62";
-var callbackUri = 'http://dev.brooktec.com/callback'
+var callbackUri = 'http://dev.brooktec.com/callback.html'
 
 var list_url = "http://api.soundcloud.com/playlists/113525318";
 
