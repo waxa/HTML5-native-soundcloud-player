@@ -176,7 +176,7 @@ function bindControls ( sound ) {
 
 	
 	actualSong.play();
-	setTimeout(isPlayingSong, 500);
+	setTimeout(isPlayingSong, 1500);
 }
 
 var isPlayingSong = function () {
