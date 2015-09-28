@@ -184,6 +184,8 @@ function bindControls ( sound ) {
 		actualSong.play();
 	}catch(err) {
 		setIconPlay();
+	} finally {
+		console.log("playstate = ", actualSong.playState, ", paused = ", actualSong.paused);
 	}
 }
 
