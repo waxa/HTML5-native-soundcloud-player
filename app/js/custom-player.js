@@ -3,7 +3,6 @@ var list_url = "http://api.soundcloud.com/playlists/113525318";
 
 var playlistGlobal = null;
 var actualSong = null;
-var firstSong = true;
 
 function inicialice () {
 	SC.initialize({
@@ -62,6 +61,7 @@ var setIconPause = function () {
 var setIconPlay = function () {
 	jQuery('#play > span > i').removeClass('fa-pause');
 	jQuery('#play > span > i').addClass('fa-play');
+	setTimeout(isPlaying, 500);
 }
 
 var whilePlayingSong = function () {
@@ -130,6 +130,12 @@ var toggleMuteSong = function () {
 	}
 }
 
+var isPlaying = function () {
+	if (!actualSong.playState) {
+		actualSong.play();
+	}	
+}
+
 var changeVolumeSong = function () {
 	var percent = jQuery('#volumen').val();
 	actualSong.setVolume(percent);
@@ -170,11 +176,8 @@ function bindControls ( sound ) {
 	jQuery('#volumen-icon').on('click', toggleMuteSong);
 	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
-	if (firstSong) {
-		sound.play();
-	} else {
-		firstSong = false;
-	}
+	sound.play();
+	setTimeout(isPlaying, 500);
 }
 
 function millisToMinSec ( time ) {
