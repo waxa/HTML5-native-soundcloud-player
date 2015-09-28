@@ -133,7 +133,10 @@ var toggleMuteSong = function () {
 var isPlaying = function () {
 	if (!actualSong.playState) {
 		actualSong.play();
-	}	
+	}
+	if (actualSong.paused) {
+		actualSong.resume();
+	}
 }
 
 var changeVolumeSong = function () {
