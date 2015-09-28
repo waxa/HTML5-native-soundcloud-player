@@ -1,5 +1,5 @@
 var clientId = "501c1160b25e660b70fce7761fb86b62";
-// var callbackUri = 'http://dev.brooktec.com/callback.html'
+var callbackUri = 'http://dev.brooktec.com/callback.html'
 
 var list_url = "http://api.soundcloud.com/playlists/113525318?client_id=" + clientId;
 
@@ -9,7 +9,8 @@ var indexTrack = null;
 
 function inicialice () {
 	SC.initialize({
-    	client_id: clientId 
+    	client_id: clientId,
+    	callback_uri: callbackUri
   	});
   	// SC.connect();
   	resolveList(list_url);
@@ -18,7 +19,7 @@ function inicialice () {
 
 
 function resolveList ( list_url ) {
-	// SC.connect(function () {
+	SC.connect(function () {
 		SC.get('/resolve', { url: list_url }, function ( playlist ) {
 			playlistGlobal = playlist;
 			
@@ -46,7 +47,7 @@ function resolveList ( list_url ) {
 				resolveSong( playlistGlobal.tracks[0].uri );
 			});
 		});
-	// });
+	});
 }
 
 
@@ -54,9 +55,9 @@ function resolveSong ( track_url ) {
 	if (actualSong) {
 		actualSong.destruct();
 	}
-	// SC.connect(function ()  {
+	SC.connect(function ()  {
 		SC.get('/resolve', { url: track_url + "?client_id=" + clientId }, streamSong);	
-	// });
+	});
 }
 
 function streamSong ( track ) {
