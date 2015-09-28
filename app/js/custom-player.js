@@ -100,13 +100,13 @@ var onProgressSong = function (e) {
 
 var playSong = function () {
 	if (actualSong.playState) actualSong.togglePause();
-	else actualSong.play();	
-
-	setTimeout(isPlayingSong, 500);
-}
-
-var isPlayingSong = function () {
-	if (!actualSong.playState || actualSong.paused) setIconPlay();
+	else {
+		try {
+			actualSong.play();	
+		} catch (err) {
+			setIconPlay();
+		}
+	}
 }
 
 var stopSong = function () {
@@ -180,7 +180,11 @@ function bindControls ( sound ) {
 	jQuery('#volumen-icon').on('click', toggleMuteSong);
 	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
-	actualSong.play();
+	try {
+		actualSong.play();
+	}catch(err) {
+		setIconPlay();
+	}
 }
 
 function millisToMinSec ( time ) {
