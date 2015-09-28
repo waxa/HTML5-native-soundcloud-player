@@ -56,12 +56,12 @@ function streamSong ( track ) {
 var setIconPause = function () {
 	jQuery('#play > span > i').removeClass('fa-play');
 	jQuery('#play > span > i').addClass('fa-pause');
+	setTimeout(isPlaying, 500);
 }
 
 var setIconPlay = function () {
 	jQuery('#play > span > i').removeClass('fa-pause');
 	jQuery('#play > span > i').addClass('fa-play');
-	setTimeout(isPlaying, 500);
 }
 
 var whilePlayingSong = function () {
@@ -95,7 +95,13 @@ var onProgressSong = function (e) {
 }
 
 var playSong = function () {
-	if (actualSong.playState) actualSong.togglePause();
+	if (actualSong.playState){
+		if(actualSong.paused){
+			actualSong.resume();
+		}else {
+			actualSong.pause();
+		}
+	}
 	else actualSong.play();	
 }
 
