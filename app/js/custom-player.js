@@ -100,13 +100,7 @@ var onProgressSong = function (e) {
 
 var playSong = function () {
 	if (actualSong.playState) actualSong.togglePause();
-	else {
-		try {
-			actualSong.play();	
-		} catch (err) {
-			setIconPlay();
-		}
-	}
+	else actualSong.play();
 }
 
 var stopSong = function () {
@@ -180,14 +174,14 @@ function bindControls ( sound ) {
 	jQuery('#volumen-icon').on('click', toggleMuteSong);
 	jQuery('#volumen').on('change mousemove', changeVolumeSong);
 
-	try {
-		actualSong.play();
-	}catch(err) {
-		setIconPlay();
-	} finally {
-		console.log("playstate = ", actualSong.playState, ", paused = ", actualSong.paused, "position = ", actualSong.position);
+	
+	actualSong.play();
+	setTimeout(isPlayingSong, 500);
+}
+
+var isPlayingSong = function () {
+	if (actualSong.playState && !actualSong.paused && actualSong.position == 0) {
 		actualSong.pause();
-		console.log("playstate = ", actualSong.playState, ", paused = ", actualSong.paused, "position = ", actualSong.position);
 	}
 }
 
